@@ -14,3 +14,16 @@ ListNode* Encryption::createLinkedList(const string& text)
 
 	return head;
 }
+
+void Encryption::deleteLinkedList(ListNode* head)
+{
+	while (head)
+	{
+		ListNode* temp = head;
+		head = head->next;
+		delete temp;
+	}
+}
+
+
+
