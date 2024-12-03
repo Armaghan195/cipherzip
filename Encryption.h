@@ -20,6 +20,7 @@ class Encryption
 private:
 	static ListNode* createLinkedList(const string& text);
 	static void deleteLinkedList(ListNode* head);
+	static ListNode* generateKeyList(ListNode* textHead, const string& key);
 };
 
 
