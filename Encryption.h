@@ -6,21 +6,20 @@
 
 using namespace std;
 
-struct ListNode
-{
+struct listnode {
 	char data;
-	ListNode* next;
+	listnode* next;
 
-	ListNode(char c) : data(c), next(NULL){}
-
+	listnode(char c) : data(c), next(nullptr) {}
 };
 
-class Encryption
+class encryption
 {
 private:
-	static ListNode* createLinkedList(const string& text);
-	static void deleteLinkedList(ListNode* head);
-	static ListNode* generateKeyList(ListNode* textHead, const string& key);
+	static listnode* createlinkedlist(const std::string& text);
+	static void deletelinkedlist(listnode* head);
+	static listnode* generatekeylist(listnode* texthead, const std::string& key);
+	static listnode* encrypttext(listnode* plaintexthead, listnode* keyhead);
 };
 
 
