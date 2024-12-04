@@ -1,29 +1,92 @@
 #include "Encryption.h"
 #include <iostream>
+#include <cctype>
 
-ListNode* Encryption::createLinkedList(const string& text)
-{
-	ListNode* head = new ListNode(text[0]);
-	ListNode* current = head;
+listnode* encryption::createlinkedlist(const std::string& text) {
+    if (text.empty()) return nullptr;
 
-	for (size_t i = 1; i < text.length(); ++i)
-	{
-		current->next = new ListNode(text[i]);
-		current = current->next;
-	}
+    listnode* head = new listnode(text[0]);
+    listnode* current = head;
 
-	return head;
+    for (size_t i = 1; i < text.length(); ++i) {
+        current->next = new listnode(text[i]);
+        current = current->next;
+    }
+
+    return head;
 }
 
-void Encryption::deleteLinkedList(ListNode* head)
-{
-	while (head)
-	{
-		ListNode* temp = head;
-		head = head->next;
-		delete temp;
-	}
+void encryption::deletelinkedlist(listnode* head) {
+    while (head) {
+        listnode* temp = head;
+        head = head->next;
+        delete temp;
+    }
 }
 
+listnode* encryption::generatekeylist(listnode* texthead, const std::string& key)
+{
+    if (!texthead || key.empty())
+        return NULL;
+
+    listnode* keyhead = NULL;
+    listnode* currentkeynode = NULL;
+
+    int keylength = key.length();
+    int keyindex = 0;
+
+    listnode* currenttextnode = texthead;
+
+    while (currenttextnode)
+    {
+        if (isalpha(currenttextnode->data))
+        {
+            char keychar = key[keyindex % keylength];
+            listnode* newnode = new listnode(keychar);
+
+            if (!keyhead)
+            {
+                keyhead = newnode;
+                currentkeynode = keyhead;
+
+            }
+            else
+            {
+                currentkeynode->next = newnode;
+                currentkeynode = currentkeynode->next;
+            }
+
+            ++keyindex;
+
+        }
+
+        else
+        {
+            listnode* newnode = new listnode(currenttextnode->data);
+
+            if (!keyhead)
+            {
+                keyhead = newnode;
+                currentkeynode = keyhead;
+            }
+            else
+            {
+                currentkeynode->next = newnode;
+                currentkeynode = currentkeynode->next;
+            }
+
+        }
+
+        currenttextnode = currenttextnode->next;
+    }
+    return keyhead;
+}
+
+
+
+listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead)
+{
+
+}
 
 
