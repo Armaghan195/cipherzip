@@ -1,6 +1,7 @@
 #include "Encryption.h"
 #include <iostream>
 #include <cctype>
+#include <fstream>
 
 listnode* encryption::createlinkedlist(const std::string& text) {
     if (text.empty()) return nullptr;
@@ -139,9 +140,92 @@ listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead)
 }
 
 
-listnode* encryption::decrypttext(listnode* chipertexthead, listnode* keyhead)
+listnode* encryption::decrypttext(listnode* ciphertexthead, listnode* keyhead)
 {
+    if (!ciphertexthead || !keyhead) 
+        return NULL;
 
+    listnode* plaintexthead = NULL;
+    listnode* currentplainnode = NULL;
+
+    listnode* currentciphertnode = ciphertexthead;
+    listnode* currentkeynode = keyhead;
+
+    while (currentciphertnode && currentkeynode) 
+    {
+        char cipherchar = currentciphertnode->data;
+        char keychar = currentkeynode->data;
+
+        char decryptedchar;
+
+        if (isalpha(cipherchar)) 
+        {
+            char base = isupper(cipherchar) ? 'A' : 'a';
+            char basekey = isupper(keychar) ? 'A' : 'a';
+
+            decryptedchar = static_cast<char> ( base + (cipherchar - base - (keychar - basekey) + 26) % 26);
+        }
+        else 
+        {
+            decryptedchar = cipherchar;
+        }
+
+        listnode* newnode = new listnode(decryptedchar);
+
+        if (!plaintexthead) 
+        {
+            plaintexthead = newnode;
+            currentplainnode = plaintexthead;
+        }
+        else 
+        {
+            currentplainnode->next = newnode;
+            currentplainnode = currentplainnode->next;
+        }
+
+        currentciphertnode = currentciphertnode->next;
+        currentkeynode = currentkeynode->next;
+    }
+
+    return plaintexthead;
+}
+
+string encryption::linkedlisttostring(listnode* head)
+{
+    string result;
+    listnode* current = head;
+
+    while (current)
+    {
+        result += current->data;
+        current = current->next;
+
+    }
+
+    return result;
+}
+
+bool encryption::encryptfile(const string& inputfilepath, const string& outputfilepath, const string& key)
+{
+    ifstream inputfile(inputfilepath);
+    if (!inputfile.is_open())
+    {
+        cerr << "cannot open input file: " << inputfilepath << endl;
+            return false;
+    }
+    
+    string plaintext((istreambuf_iterator<char>(inputfile)), istreambuf_iterator<char>());
+    inputfile.close();
+
+    listnode* plaintexthead = createlinkedlist(plaintext);
+    listnode* keyhead = generatekeylist(plaintexthead, key);
+
+    listnode* ciphertexthead = encrypttext(plaintexthead, keyhead);
+    string ciphertext = linkedlisttostring(ciphertexthead);
+
+
+
+    
 }
 
 
