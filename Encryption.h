@@ -21,6 +21,12 @@ private:
 	static listnode* generatekeylist(listnode* texthead, const std::string& key);
 	static listnode* encrypttext(listnode* plaintexthead, listnode* keyhead);
 	static listnode* decrypttext(listnode* ciphertexthead, listnode* keyhead);
+	static string linkedlisttostring(listnode* head);
+
+public:
+
+	static bool encryptfile(const string& inputfilepath, const string& outputfilepath, const string& key);
+	static bool decryptfile(const string& inputfilepath, const string& outputfilepath, const string& key);
 };
 
 
