@@ -86,7 +86,63 @@ listnode* encryption::generatekeylist(listnode* texthead, const std::string& key
 
 listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead)
 {
+    if (!plaintexthead || !keyhead)
+        return NULL;
+
+    listnode* chipertexthead = NULL;
+    listnode* currentchipernode = NULL;
+
+    listnode* currentplainnode = plaintexthead;
+    listnode* currentkeynode = keyhead;
+
+    while (currentplainnode || currentkeynode)
+    {
+        char plainchar = currentplainnode->data;
+        char keychar = currentkeynode->data;
+
+        char encryptedchar;
+
+        if (isalpha(plainchar))
+        {
+            char base = isupper(plainchar) ? 'A' : 'a';
+            char basekey = islower(keychar) ? 'A' : 'a';
+
+            encryptedchar = static_cast<char>(base + (plainchar - base + (plainchar - base)) % 26);  // fourmulaaaaaaaaaaaaaaaaaaaa
+
+        }
+        else
+        {
+            encryptedchar = plainchar;
+
+        }
+
+        listnode* newnode = new listnode(encryptedchar);
+
+        if (!chipertexthead)
+        {
+            chipertexthead = newnode;
+            currentchipernode = chipertexthead;
+        }
+        else
+        {
+            currentchipernode->next = newnode;
+            currentchipernode = currentchipernode->next;
+
+        }
+
+        currentplainnode = currentplainnode->next;
+        currentkeynode = currentkeynode->next;
+
+    }
+
+    return chipertexthead;
+}
+
+
+listnode* encryption::decrypttext(listnode* chipertexthead, listnode* keyhead)
+{
 
 }
+
 
 
