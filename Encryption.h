@@ -20,6 +20,7 @@ private:
 	static void deletelinkedlist(listnode* head);
 	static listnode* generatekeylist(listnode* texthead, const std::string& key);
 	static listnode* encrypttext(listnode* plaintexthead, listnode* keyhead);
+	static listnode* decrypttext(listnode* ciphertexthead, listnode* keyhead);
 };
 
 
