@@ -223,9 +223,69 @@ bool encryption::encryptfile(const string& inputfilepath, const string& outputfi
     listnode* ciphertexthead = encrypttext(plaintexthead, keyhead);
     string ciphertext = linkedlisttostring(ciphertexthead);
 
+    ofstream outputfile(outputfilepath);
+    if (!outputfile.is_open()) 
+    {
+        cerr << "cannot open output file: " << outputfilepath << endl;
 
+        deletelinkedlist(plaintexthead);
+        deletelinkedlist(keyhead);
+        deletelinkedlist(ciphertexthead);
+
+        return false;
+    }
+
+    outputfile << ciphertext;
+    outputfile.close();
+
+    deletelinkedlist(plaintexthead);
+    deletelinkedlist(keyhead);
+    deletelinkedlist(ciphertexthead);
+
+    return true;
 
     
+}
+
+bool encryption::decryptfile(const string& inputfilepath, const string& outputfilepath, const string& key) 
+{
+    ifstream inputfile(inputfilepath);
+    if (!inputfile.is_open()) 
+    {
+        cerr << "cannot open input file: " << inputfilepath << endl;
+        return false;
+    }
+
+    string ciphertext((istreambuf_iterator<char>(inputfile)), istreambuf_iterator<char>());
+    inputfile.close();
+
+    listnode* ciphertexthead = createlinkedlist(ciphertext);
+    listnode* keyhead = generatekeylist(ciphertexthead, key);
+
+    listnode* plaintexthead = decrypttext(ciphertexthead, keyhead);
+
+    string plaintext = linkedlisttostring(plaintexthead);
+
+    ofstream outputfile(outputfilepath);
+    if (!outputfile.is_open()) 
+    {
+        cerr << "cannot open output file: " << outputfilepath << endl;
+
+        deletelinkedlist(ciphertexthead);
+        deletelinkedlist(keyhead);
+        deletelinkedlist(plaintexthead);
+
+        return false;
+    }
+
+    outputfile << plaintext;
+    outputfile.close();
+
+    deletelinkedlist(ciphertexthead);
+    deletelinkedlist(keyhead);
+    deletelinkedlist(plaintexthead);
+
+    return true;
 }
 
 
