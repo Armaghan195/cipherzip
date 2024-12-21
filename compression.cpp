@@ -1,40 +1,66 @@
 #include "compression.h"
-#include <fstream>
 #include <iostream>
-#include <queue>
+#include <fstream>
 #include <vector>
+#include <zlib.h>
 using namespace std;
 
+bool Compression::compressFile(const string& inputFilePath, const string& outputFilePath) {
+    ifstream inputFile(inputFilePath, ios::binary);
+    if (!inputFile.is_open()) {
+        cerr << "Cannot open input file: " << inputFilePath << endl;
+        return false;
+    }
 
-void compression::readdata(const string& filepath, string& data) 
-{
-    ifstream in(filepath, ios::binary);
-    if (!in.is_open()) return;
-    data.assign((istreambuf_iterator<char>(in)), istreambuf_iterator<char>());
-    in.close();
+    vector<char> inputBuffer((istreambuf_iterator<char>(inputFile)), istreambuf_iterator<char>());
+    inputFile.close();
+
+    uLongf compressedSize = compressBound(inputBuffer.size());
+    vector<char> compressedBuffer(compressedSize);
+
+    if (compress((Bytef*)compressedBuffer.data(), &compressedSize, (const Bytef*)inputBuffer.data(), inputBuffer.size()) != Z_OK) {
+        cerr << "Compression failed." << endl;
+        return false;
+    }
+
+    ofstream outputFile(outputFilePath, ios::binary);
+    if (!outputFile.is_open()) {
+        cerr << "Cannot open output file: " << outputFilePath << endl;
+        return false;
+    }
+
+    outputFile.write(compressedBuffer.data(), compressedSize);
+    outputFile.close();
+
+    return true;
 }
 
-void compression::buildfreq(const string& data, unordered_map<char, int>& freq) 
-{
-    for (char c : data) freq[c]++;
-}
+bool Compression::decompressFile(const string& inputFilePath, const string& outputFilePath) {
+    ifstream inputFile(inputFilePath, ios::binary);
+    if (!inputFile.is_open()) {
+        cerr << "Cannot open input file: " << inputFilePath << endl;
+        return false;
+    }
 
-node* compression::buildtree(const unordered_map<char, int>& freq)
-{
-    priority_queue<node*, vector<node*>, cmp> pq;
-    for (auto& p : freq) 
-    {
-        pq.push(new node(p.first, p.second));
+    vector<char> compressedBuffer((istreambuf_iterator<char>(inputFile)), istreambuf_iterator<char>());
+    inputFile.close();
+
+    uLongf decompressedSize = compressedBuffer.size() * 5; // Assuming max decompression size.
+    vector<char> decompressedBuffer(decompressedSize);
+
+    while (uncompress((Bytef*)decompressedBuffer.data(), &decompressedSize, (const Bytef*)compressedBuffer.data(), compressedBuffer.size()) == Z_BUF_ERROR) {
+        decompressedSize *= 2;
+        decompressedBuffer.resize(decompressedSize);
     }
-    if (pq.empty()) return nullptr;
-    while (pq.size() > 1) 
-    {
-        node* l = pq.top(); pq.pop();
-        node* r = pq.top(); pq.pop();
-        node* nd = new node('\0', l->freq + r->freq);
-        nd->left = l;
-        nd->right = r;
-        pq.push(nd);
+
+    ofstream outputFile(outputFilePath, ios::binary);
+    if (!outputFile.is_open()) {
+        cerr << "Cannot open output file: " << outputFilePath << endl;
+        return false;
     }
-    return pq.top();
+
+    outputFile.write(decompressedBuffer.data(), decompressedSize);
+    outputFile.close();
+
+    return true;
 }
