@@ -1,1 +1,6 @@
+hello how are you. I am fine. I am working on this project.
+I am trying to implement a simple encryption and compression algorithm.
+I am using AES for encryption and zlib for compression.
+I am using the Crypto++ library for AES encryption.
+I am using the zlib
 
