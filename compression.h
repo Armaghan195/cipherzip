@@ -1,26 +1,13 @@
-#ifndef compression_h
-#define compression_h
+#ifndef COMPRESSION_H
+#define COMPRESSION_H
 
 #include <string>
-#include <unordered_map>
 using namespace std;
 
-struct node 
-{
-    char ch;
-    int freq;
-    node* left;
-    node* right;
-    node(char c, int f) : ch(c), freq(f), left(nullptr), right(nullptr) {}
-};
-
-class compression 
-{
-
-private:
-    static void readdata(const string& filepath, string& data);
-    static void buildfreq(const string& data, unordered_map<char, int>& freq);
-    static node* buildtree(const unordered_map<char, int>& freq);
+class Compression {
+public:
+    static bool compressFile(const string& inputFilePath, const string& outputFilePath);
+    static bool decompressFile(const string& inputFilePath, const string& outputFilePath);
 };
 
 #endif
