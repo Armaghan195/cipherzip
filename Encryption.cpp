@@ -85,55 +85,45 @@ listnode* encryption::generatekeylist(listnode* texthead, const std::string& key
 
 
 
-listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead)
-{
+listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead) {
     if (!plaintexthead || !keyhead)
-        return NULL;
+        return nullptr;
 
-    listnode* chipertexthead = NULL;
-    listnode* currentchipernode = NULL;
+    listnode* chipertexthead = nullptr;
+    listnode* currentchipernode = nullptr;
 
     listnode* currentplainnode = plaintexthead;
     listnode* currentkeynode = keyhead;
 
-    while (currentplainnode || currentkeynode)
-    {
+    while (currentplainnode && currentkeynode) {
         char plainchar = currentplainnode->data;
         char keychar = currentkeynode->data;
 
         char encryptedchar;
 
-        if (isalpha(plainchar))
-        {
+        if (isalpha(plainchar)) {
             char base = isupper(plainchar) ? 'A' : 'a';
-            char basekey = islower(keychar) ? 'A' : 'a';
+            char basekey = isupper(keychar) ? 'A' : 'a';
 
-            encryptedchar = static_cast<char>(base + (plainchar - base + (plainchar - base)) % 26);  // fourmulaaaaaaaaaaaaaaaaaaaa
-
+            encryptedchar = static_cast<char>(base + (plainchar - base + (keychar - basekey)) % 26);
         }
-        else
-        {
+        else {
             encryptedchar = plainchar;
-
         }
 
         listnode* newnode = new listnode(encryptedchar);
 
-        if (!chipertexthead)
-        {
+        if (!chipertexthead) {
             chipertexthead = newnode;
             currentchipernode = chipertexthead;
         }
-        else
-        {
+        else {
             currentchipernode->next = newnode;
             currentchipernode = currentchipernode->next;
-
         }
 
         currentplainnode = currentplainnode->next;
         currentkeynode = currentkeynode->next;
-
     }
 
     return chipertexthead;
@@ -142,7 +132,7 @@ listnode* encryption::encrypttext(listnode* plaintexthead, listnode* keyhead)
 
 listnode* encryption::decrypttext(listnode* ciphertexthead, listnode* keyhead)
 {
-    if (!ciphertexthead || !keyhead) 
+    if (!ciphertexthead || !keyhead)
         return NULL;
 
     listnode* plaintexthead = NULL;
@@ -151,33 +141,33 @@ listnode* encryption::decrypttext(listnode* ciphertexthead, listnode* keyhead)
     listnode* currentciphertnode = ciphertexthead;
     listnode* currentkeynode = keyhead;
 
-    while (currentciphertnode && currentkeynode) 
+    while (currentciphertnode && currentkeynode)
     {
         char cipherchar = currentciphertnode->data;
         char keychar = currentkeynode->data;
 
         char decryptedchar;
 
-        if (isalpha(cipherchar)) 
+        if (isalpha(cipherchar))
         {
             char base = isupper(cipherchar) ? 'A' : 'a';
             char basekey = isupper(keychar) ? 'A' : 'a';
 
-            decryptedchar = static_cast<char> ( base + (cipherchar - base - (keychar - basekey) + 26) % 26);
+            decryptedchar = static_cast<char> (base + (cipherchar - base - (keychar - basekey) + 26) % 26);
         }
-        else 
+        else
         {
             decryptedchar = cipherchar;
         }
 
         listnode* newnode = new listnode(decryptedchar);
 
-        if (!plaintexthead) 
+        if (!plaintexthead)
         {
             plaintexthead = newnode;
             currentplainnode = plaintexthead;
         }
-        else 
+        else
         {
             currentplainnode->next = newnode;
             currentplainnode = currentplainnode->next;
@@ -211,9 +201,9 @@ bool encryption::encryptfile(const string& inputfilepath, const string& outputfi
     if (!inputfile.is_open())
     {
         cerr << "cannot open input file: " << inputfilepath << endl;
-            return false;
+        return false;
     }
-    
+
     string plaintext((istreambuf_iterator<char>(inputfile)), istreambuf_iterator<char>());
     inputfile.close();
 
@@ -224,7 +214,7 @@ bool encryption::encryptfile(const string& inputfilepath, const string& outputfi
     string ciphertext = linkedlisttostring(ciphertexthead);
 
     ofstream outputfile(outputfilepath);
-    if (!outputfile.is_open()) 
+    if (!outputfile.is_open())
     {
         cerr << "cannot open output file: " << outputfilepath << endl;
 
@@ -244,13 +234,13 @@ bool encryption::encryptfile(const string& inputfilepath, const string& outputfi
 
     return true;
 
-    
+
 }
 
-bool encryption::decryptfile(const string& inputfilepath, const string& outputfilepath, const string& key) 
+bool encryption::decryptfile(const string& inputfilepath, const string& outputfilepath, const string& key)
 {
     ifstream inputfile(inputfilepath);
-    if (!inputfile.is_open()) 
+    if (!inputfile.is_open())
     {
         cerr << "cannot open input file: " << inputfilepath << endl;
         return false;
@@ -267,7 +257,7 @@ bool encryption::decryptfile(const string& inputfilepath, const string& outputfi
     string plaintext = linkedlisttostring(plaintexthead);
 
     ofstream outputfile(outputfilepath);
-    if (!outputfile.is_open()) 
+    if (!outputfile.is_open())
     {
         cerr << "cannot open output file: " << outputfilepath << endl;
 
@@ -287,6 +277,5 @@ bool encryption::decryptfile(const string& inputfilepath, const string& outputfi
 
     return true;
 }
-
 
 
