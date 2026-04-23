@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>computer.png</file>
+        <file>dropbox.png</file>
+        <file>folder.png</file>
+        <file>icons8-decompress-50.png</file>
+        <file>minimize.png</file>
+        <file>../../Downloads/icons8-encryption-32.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>../../Downloads/Rectangle 4.png</file>
+        <file>../../Downloads/Rectangle 3.png</file>
+        <file>../../Downloads/Rectangle 2.png</file>
+        <file>../../Downloads/Rectangle 1.png</file>
+        <file>../../Downloads/icons8-file-management-100.png</file>
+        <file>../../Downloads/icons8-file-management-flat-icons/icons8-file-management-100.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>zip (1).png</file>
+        <file>icons8-decompress-50.png</file>
+        <file>minimize.png</file>
+        <file>folder.png</file>
+        <file>computer.png</file>
+        <file>dropbox.png</file>
+    </qresource>
+</RCC>
